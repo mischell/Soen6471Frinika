@@ -1,0 +1,262 @@
+<?xml version='1.0'?>
+<!-- 
+	 Frinika build script by Toni (oc2pus@arcor.de)
+	 Use this as an alternative build method if you don't want to use Eclipse
+-->
+
+<project name="frinika" default="jar" basedir=".">
+
+  <!-- set global properties for this build -->
+    <property name="name" value="frinika"/>
+    <property name="package" value="*"/>
+    <property name="version" value="0.6.0"/>
+    <property name="jarname" value="${name}.jar"/>
+    <property name="src" value="src"/>
+    <property name="src_unit_tests" value="src_unit_tests"/>
+    <property name="build" value="bin"/>
+    <property name="build_unit_tests" value="bin_unit_tests"/>
+    <property name="lib" value="lib"/>
+    <property name="docs" value="doc"/>
+
+  <!-- Set this to on if you want to use debugging in e.g. Netbeans -->
+    <property name="compiledebug" value="on"/>
+  
+  <!-- property name="nativecode_jjack" value="cpp/jjack"/ -->
+  <!--property name="nativecode_priority" value="cpp/priority"/-->
+    <property name="tootJar"  value="../TootLatest2/dist/TootLatest2.jar"/>
+    <property name="tootAudioServersJar"  value="../tootaudioserver/dist/TootAudioServers.jar"/>
+
+    <property name="jarlibs" value="/usr/share/java"/>
+
+  <!-- all external jar-files used by frinika -->
+    <property name="lib.flexdock" value="lib/flexdock-0.5.1.jar"/>
+    <property name="lib.js" value="lib/js.jar"/>
+    <property name="lib.jmod" value="lib/jmod_0_9k.jar"/>
+    <property name="lib.jVorbisEnc" value="lib/jVorbisEnc.jar"/>
+    <property name="lib.looks" value="lib/looks-2.1.3.jar"/>
+    <property name="lib.toot" value="lib/toot-r3-beta2.jar"/>
+    <property name="lib.audioServers" value="lib/audioServers-beta2.jar"/>
+    <property name="lib.rasmusdsp" value="lib/rasmusdsp.jar"/>
+    <property name="lib.MRJAdapter" value="lib/MRJAdapter.jar"/>
+    <property name="lib.gervill" value="lib/gervill.jar"/>
+    <property name="lib.jjack" value="lib/jjack.jar"/>
+    <property name="lib.logging" value="lib/Logging.jar"/>
+    <property name="lib.frinikaserverinterfaces" value="lib/FrinikaServerInterfaces.jar"/>
+    <property name="lib.lmappletserver_core" value="lib/lmappletserver_core.jar"/>
+
+    <property name="classpath" value="${lib.lmappletserver_core} ${lib.frinikaserverinterfaces} ${lib.jjack} ${lib.js} ${lib.jVorbisEnc} ${lib.flexdock} ${lib.looks} ${lib.toot} ${lib.audioServers} ${lib.jmod} ${lib.rasmusdsp} ${lib.gervill} ${lib.logging}" />
+    <property name="javaversion" value="1.5" />
+
+	<!-- Set platform-dependent distribution directory -->
+	<!-- ${file.separator} is "\" on Windows, and "/" on Unix -->
+	<!--  
+		<condition property="nativelib.dir" value="${build}${file.separator}lib${file.separator}windows">
+			<os family="windows" />
+		</condition> 
+	-->
+    <condition property="nativelib.dir" value="${build}/lib/i386/linux">
+        <os name="linux" arch="i386"/>
+    </condition>
+    <condition property="src.nativelib.dir" value="${src}/lib/i386/linux">
+        <os name="linux" arch="i386"/>
+    </condition>
+    <condition property="nativelib.dir" value="${build}/lib/amd64/linux">
+        <os name="linux" arch="amd64"/>
+    </condition>
+    <condition property="src.nativelib.dir" value="${src}/lib/amd64/linux">
+        <os name="linux" arch="amd64"/>
+    </condition>
+<!--
+	<condition property="nativelib.dir" value="${build}/lib/solaris_sparc">
+		<os name="sunos" arch="sparc"/>
+	</condition> 
+	<condition property="nativelib.dir" value="${build}/lib/solaris_x86">
+		<os name="sunos" arch="x86"/>
+	</condition> 
+	<condition property="nativelib.dir" value="${build}/lib/freebsd">
+		<os name="freebsd"/>
+	</condition> 
+	<condition property="nativelib.dir" value="${build}/lib/mac_os_x">
+		<os name="Mac OS X"/>
+	</condition> 
+-->
+
+	<!-- list all paths and libs to compile frinika -->
+    <path id="lib.path">
+        <pathelement path="${build}"/>
+        <pathelement path="${lib.flexdock}"/>
+        <pathelement path="${lib.jmod}"/>
+        <pathelement path="${lib.js}"/>
+        <pathelement path="${lib.jVorbisEnc}"/>
+        <pathelement path="${lib.looks}"/>
+        <pathelement path="${lib.rasmusdsp}"/>
+        <pathelement path="${lib.toot}"/>
+        <pathelement path="${lib.audioServers}"/>
+        <pathelement path="${lib.MRJAdapter}"/>
+        <pathelement path="${lib.gervill}"/>
+        <pathelement path="${lib.frinikaserverinterfaces}"/>
+        <pathelement path="${lib.lmappletserver_core}"/>
+<!--		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+-->
+    </path>
+ 
+	<!-- Create the build directory structure used by compile -->
+    <target name="init">
+        <mkdir dir="${build}" />
+        <mkdir dir="${lib}" />
+        <mkdir dir="${docs}" />
+        <mkdir dir="${nativelib.dir}" />
+		<!--mkdir dir="${src.nativelib.dir}" /-->
+    </target>
+        
+	<!-- run javac to compile the source files -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src}"
+			source="${javaversion}"
+			target="${javaversion}"
+			destdir="${build}" debug="${compiledebug}" 
+                        debuglevel="vars,lines,source">
+            <classpath>
+                <path refid="lib.path"/>
+            </classpath>
+        </javac>
+        <copy todir="${build}" file="${src}/version.properties" />
+        <java classpath="bin" classname="com.frinika.VersionProperties" />
+        <delete file="${build}/version.properties" />
+        <copy todir="${build}">
+            <fileset dir="${src}" excludes="**/*.java">
+            </fileset>
+        </copy>
+    </target>
+
+	<!-- Build native libraries -->
+	<!-- This is a separate target - cause it won't work on all platforms (i.e. windows - which doesn't have JACK) -->
+    <target name="buildnativelib" depends="init"
+		description="build native libraries." >
+		<!-- exec dir="${nativecode_jjack}"	executable="make" failonerror="yes" >
+			<env key="JAVA_HOME" path="${java.home}/../" />
+		</exec>
+
+		<copy file="${nativecode_jjack}/libfrinika.so" todir="${nativelib.dir}" />
+		<chmod dir="${nativelib.dir}" perm="644" includes="*.so"/>
+	  	<exec dir="${nativecode_jjack}" executable="make" ><arg value="clean"/>
+		</exec-->
+		
+        <exec dir="${nativecode_priority}" executable="make" failonerror="yes" >
+            <env key="JAVA_HOME" path="${java.home}/../" />
+            <arg value="JAVA_HOME=${java.home}/../"/>
+        </exec>
+		<!--copy file="${nativecode_priority}/libpriority.so" todir="${nativelib.dir}" /-->
+        <chmod dir="${nativelib.dir}" perm="644" includes="*.so"/>
+<!--	
+		<exec dir="${nativecode_priority}" executable="make" ><arg value="clean"/>
+		</exec>
+-->
+    </target>
+		
+	<!-- make a jar file -->
+    <target name="jar" depends="compile">
+        <copy todir="${build}/icons">
+            <fileset dir="${src}/icons"/>
+        </copy>
+        <copy todir="${build}/sounds">
+            <fileset dir="${src}/sounds"/>
+        </copy>
+        <copy todir="${build}">
+            <fileset dir="${src}">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy file="${src}/COPYING" todir="${build}"/>
+		
+        <jar jarfile="${jarname}" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="com.frinika.FrinikaMain" />
+                <attribute name="Sealed" value="false" />
+                <attribute name="Class-Path" value="${classpath}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jarname}" maxmemory="512m" fork="true"/>
+    </target>
+    <target name="run-pjl" depends="jar">
+        <java jar="${jarname}" maxmemory="720m" fork="true" >
+            <jvmarg value="-ea"/>
+        </java>
+    </target>
+        
+<!-- TODO: exclude *.so, *.o and some other binary files -->
+    <target name="release" depends="jar">
+        <zip file="../frinika.zip">
+            <zipfileset dir="." prefix="frinika" includes="frinika.jar" />
+            <zipfileset dir="." prefix="frinika" includes="frinika.sh" />
+            <zipfileset dir="." prefix="frinika" includes="frinika.exe" />
+            <zipfileset dir="." prefix="frinika" includes="README.txt" />
+            <zipfileset dir="." prefix="frinika" includes="frinika.ico" />
+            <zipfileset dir="src" prefix="frinika" includes="COPYING" />
+            <zipfileset dir="src/patchnames" prefix="frinika/patchnames" includes="*" />
+            <zipfileset dir="lib" prefix="frinika/lib" includes="**/*" />
+        </zip>
+        <java classpath="bin" classname="com.frinika.release.ApplyReleaseVersion" />
+    </target>
+	
+	<!-- create javadocs -->
+    <target name="javadocs">
+        <javadoc packagenames="${package}"
+			sourcepath="${src}"
+			destdir="${docs}"
+			author="true"
+			version="true"
+			use="true"
+			windowtitle="${name} ${version} API"
+			doctitle="${name} ${version} API">
+            <classpath>
+                <path refid="lib.path"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target name="sourcerelease" depends="clean">
+        <zip destfile="../frinika-src.zip" >
+            <fileset dir="../" >
+                <include name="frinika/**/*"/>
+                <exclude name="frinika/frinika.jar"/>
+                <exclude name="frinika/libfrinika.so"/>
+            </fileset>
+        </zip>
+        <mkdir dir="${build}" />
+        <javac srcdir="${src}"
+			source="${javaversion}"
+			target="${javaversion}"
+			destdir="${build}" 
+			includes="com/frinika/release/ApplySourceReleaseVersion.java"/>	
+        <copy todir="${build}" file="${src}/version.properties" />
+                <!-- Update version properties file in bin -->
+        <java classpath="${build}" classname="com.frinika.VersionProperties" />
+        <delete file="${build}/version.properties" />
+        <copy todir="${build}" file="${src}/version.properties" />
+                <!--                                      -->
+        <java classpath="${build}" classname="com.frinika.release.ApplySourceReleaseVersion" />
+    </target>
+ 
+	<!-- Delete the ${build} and ${lib} directory trees -->
+    <target name="clean">
+        <delete dir="${build}"/>
+        <delete dir="${build_unit_tests}"/>
+        <delete dir="${docs}"/>
+    </target>
+        
+        <!-- for PJL -->	
+    <target name="copytootjars">
+        <copy file="${tootJar}" tofile="${lib.toot}" overwrite="true" />
+        <copy file="${tootAudioServersJar}" tofile="${lib.audioServers}" overwrite="true" />
+    </target>
+
+
+
+</project>
+

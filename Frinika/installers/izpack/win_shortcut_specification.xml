@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<shortcuts>
+  <skipIfNotSupported/>
+  <programGroup defaultName="Frinika"
+                location="applications||startMenu"/>
+  <shortcut
+    name="Frinika"
+    target="$INSTALL_PATH\frinika.exe"
+    commandLine=""
+    workingDirectory="$INSTALL_PATH"
+    description="Frinika"
+    iconFile="$INSTALL_PATH\frinika.exe"
+    iconIndex="0"
+    initialState="normal"
+    programGroup="yes"
+    desktop="yes"
+    applications="no"
+    startMenu="no"
+    startup="no">
+
+    <createForPack name="Base"/>
+  </shortcut>
+
+   <shortcut
+     name="Uninstall Frinika"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH\Uninstaller\uninstaller.jar"     
+     commandLine=""
+	 iconFile="%SystemRoot%\system32\SHELL32.dll"
+     iconIndex="31" 
+     description="This uninstalls Frinika">    
+     <createForPack name="Base" />
+   </shortcut>
+
+</shortcuts>

@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
+
+  <Product Name='Frinika 0.4.0' Id='1c1efff6-fc1d-11db-8314-0800200c9a66' UpgradeCode='10900e70-d28b-11db-8314-0800200c9a66'
+    Language='1033' Codepage='1252' Version='0.4.0.1' Manufacturer='The Frinika developers.'>
+
+    <Package Id='????????-????-????-????-????????????' Keywords='Installer'
+      Description="Frinika 0.4.0 Installer"
+      Comments='This software is licensed under GNU General Public License (GPL) version 2.' Manufacturer='The Frinika developers.'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='frinika.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Frinika 0.4.0 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='INSTALLDIR' Name='Frinika'>
+
+          <Component Id='MainExecutable' Guid='3fd5bc4c-d28c-11db-8314-0800200c9a66'>
+            <File Id='FrinikaEXE' Name='frinika.exe' DiskId='1'
+              Source='..\..\frinika.exe' Vital='yes'>
+              <Shortcut Id="startmenuFrinika" Directory="ProgramMenuDir" Name="Frinika" 
+                LongName="Frinika" WorkingDirectory='INSTALLDIR'
+                Icon="frinika.exe" IconIndex="0" />
+              <Shortcut Id="desktopFoobar10" Directory="DesktopFolder" Name="Frinika"
+                LongName="Frinika" WorkingDirectory='INSTALLDIR'
+                Icon="frinika.exe" IconIndex="0" />
+            </File>
+          </Component>
+
+          <Component Id='COPYING' Guid='21c548ea-d290-11db-8314-0800200c9a66'>
+             <File Id='COPYING' Name='COPYING' DiskId='1' Source='..\..\COPYING' Vital='yes' />
+          </Component>          
+
+          <Component Id='FrinikaJAR' Guid='70c581a2-d28c-11db-8314-0800200c9a66'>
+             <File Id='FrinikaJAR' Name='frinika.jar' DiskId='1' Source='..\..\frinika.jar' Vital='yes' />
+          </Component>
+                    
+          <Directory Id='lib' Name='lib'>
+            <Component Id='RasmusJAR' Guid='26a5378a-d290-11db-8314-0800200c9a66'>
+               <File Id='RasmusJAR'   LongName="rasmusdsp.jar"   Name='rasmus' DiskId='1' Source='..\..\lib\rasmusdsp.jar' Vital='yes' />
+            </Component>                     
+            <Component Id='LooksJAR' Guid='26a5378b-d290-11db-8314-0800200c9a66'>
+               <File Id='LooksJAR'    LongName="looks-2.1.3.jar" Name='looks' DiskId='1' Source='..\..\lib\looks-2.1.3.jar' Vital='yes' />
+            </Component>         
+            <Component Id='TootJAR' Guid='26a5378c-d290-11db-8314-0800200c9a66'>
+               <File Id='TootJAR'     LongName="toot-r2.jar" Name='toot' DiskId='1' Source='..\..\lib\toot-r2.jar' Vital='yes' />
+            </Component>         
+            <Component Id='FlexdockJAR' Guid='26a5378d-d290-11db-8314-0800200c9a66'>
+               <File Id='FlexdockJAR' LongName="flexdock-0.5.1.jar" Name='flexdock' DiskId='1' Source='..\..\lib\flexdock-0.5.1.jar' Vital='yes' />
+            </Component>         
+            <Component Id='JmodJAR' Guid='26a5378e-d290-11db-8314-0800200c9a66'>
+               <File Id='JmodJAR'     LongName="jmod_0_9k.jar" Name='jmod' DiskId='1' Source='..\..\lib\jmod_0_9k.jar' Vital='yes' />
+            </Component>         
+            <Component Id='JsJAR' Guid='5be56f90-d296-11db-8314-0800200c9a66'>
+               <File Id='JsJAR'     LongName="js.jar" Name='js' DiskId='1' Source='..\..\lib\js.jar' Vital='yes' />
+            </Component>         
+            <Component Id='Vorbis' Guid='4b9218bc-d4d9-11db-8314-0800200c9a66'>
+               <File Id='Vorbis'     LongName="jVorbisEnc.jar" Name='js' DiskId='1' Source='..\..\lib\jVorbisEnc.jar' Vital='yes' />
+            </Component>                                   
+            <Component Id='RasmusTXT' Guid='5e2b0b6e-d4e1-11db-8314-0800200c9a66'>
+               <File Id='RasmusTXT'   LongName="RasmusDSP_LICENSE.txt"   Name='rasmus.txt' DiskId='1' Source='..\..\lib\RasmusDSP_LICENSE.txt' Vital='yes' />
+            </Component>                     
+            <Component Id='LooksTXT' Guid='5e2b0b6f-d4e1-11db-8314-0800200c9a66'>
+               <File Id='LooksTXT'    LongName="looks_LICENSE.txt" Name='looks.txt' DiskId='1' Source='..\..\lib\looks_LICENSE.txt' Vital='yes' />
+            </Component>         
+            <Component Id='FlexdockTXT' Guid='5e2b0b70-d4e1-11db-8314-0800200c9a66'>
+               <File Id='FlexdockTXT' LongName="flexdock_LICENSE.txt" Name='flexdock.txt' DiskId='1' Source='..\..\lib\flexdock_LICENSE.txt' Vital='yes' />
+            </Component>         
+            <Component Id='JmodTXT' Guid='5e2b0b71-d4e1-11db-8314-0800200c9a66'>
+               <File Id='JmodTXT'     LongName="jmod_readme_0_9.txt" Name='jmod.txt' DiskId='1' Source='..\..\lib\jmod_readme_0_9.txt' Vital='yes' />
+            </Component>         
+            <Component Id='JsTXT' Guid='5e2b0b72-d4e1-11db-8314-0800200c9a66'>
+               <File Id='JsTXT'     LongName="readme-js_jar.txt" Name='js.txt' DiskId='1' Source='..\..\lib\readme-js_jar.txt' Vital='yes' />
+            </Component>          
+            <Component Id='VorbisTXT' Guid='42634876-d647-11db-8314-0800200c9a66'>
+               <File Id='VorbisTXT'    LongName="jVorbisEnc.txt" Name='vorbis.txt' DiskId='1' Source='..\..\lib\jVorbisEnc.txt' Vital='yes' />
+            </Component>                                                       
+          </Directory>         
+
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
+        <Directory Id="ProgramMenuDir" Name='Frinika' />
+      </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id='Complete' Level='1' 
+             Title='Frinika 0.4' 
+             Description='The complete package.' 
+             ConfigurableDirectory='INSTALLDIR'>
+      <ComponentRef Id='COPYING' />      
+      <ComponentRef Id='MainExecutable' />
+      <ComponentRef Id='FrinikaJAR' />      
+      <ComponentRef Id='RasmusJAR' />
+      <ComponentRef Id='LooksJAR' />
+      <ComponentRef Id='TootJAR' />
+      <ComponentRef Id='FlexdockJAR' />
+      <ComponentRef Id='JmodJAR' />      
+      <ComponentRef Id='JsJAR' />      
+      <ComponentRef Id='Vorbis' />      
+      <ComponentRef Id='RasmusTXT' />
+      <ComponentRef Id='LooksTXT' />
+      <ComponentRef Id='FlexdockTXT' />
+      <ComponentRef Id='JmodTXT' />      
+      <ComponentRef Id='JsTXT' />         
+      <ComponentRef Id='VorbisTXT' />         
+    </Feature>
+    
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <UIRef Id="WixUI_InstallDir" />   
+    <UIRef Id="WixUI_ErrorProgressText" />    
+
+    <Icon Id="frinika.exe" SourceFile="..\..\frinika.exe" />
+
+  </Product>
+
+</Wix>

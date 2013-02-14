@@ -1,0 +1,41 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>frinika.jar</jar>
+  <outfile>frinika.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>frinika.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <dontUsePrivateJres>false</dontUsePrivateJres>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>400</maxHeapSize>
+  </jre>
+  <splash>
+    <file>splash.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
+  <versionInfo>
+    <fileVersion>0.4.0.0</fileVersion>
+    <txtFileVersion>0.4</txtFileVersion>
+    <fileDescription>Frinika</fileDescription>
+    <copyright>Frinika Developers 2004-2007</copyright>
+    <productVersion>0.4.0.0</productVersion>
+    <txtProductVersion>0.4</txtProductVersion>
+    <productName>Frinika</productName>
+    <companyName></companyName>
+    <internalName>Frinika</internalName>
+    <originalFilename>frinika.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

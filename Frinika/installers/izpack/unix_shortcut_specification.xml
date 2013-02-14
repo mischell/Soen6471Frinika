@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<shortcuts>
+
+  <programGroup defaultName="Frinika" location="applications"/>
+
+    <shortcut
+     name="Frinika"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="yes"
+     startup="no"
+     target="sh"
+     commandLine="$INSTALL_PATH/frinika.sh"
+     workingDirectory="$INSTALL_PATH"
+     description="Frinika"
+     iconFile="$INSTALL_PATH/frinika.png"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="true"
+     KdeSubstUID="false"
+     initialState="normal">
+     <createForPack name="Base"/>
+   </shortcut>
+
+   <shortcut
+     name="Uninstaller"
+     programGroup="yes"
+     desktop="yes"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="/usr/lib/java/bin/java"
+     commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+     initialState="noShow"
+     iconFile="trashcan_full"
+     iconIndex="0"
+     workingDirectory=""
+     type="Application"
+     encoding="UTF-8"
+     description="Uninstall Frinika">
+     <createForPack name="Core" />
+   </shortcut>
+
+
+
+</shortcuts>
