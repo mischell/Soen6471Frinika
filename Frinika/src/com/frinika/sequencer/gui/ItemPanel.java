@@ -63,7 +63,7 @@ import static com.frinika.localization.CurrentLocale.getMessage;
  * 
  */
 abstract public class ItemPanel extends JPanel implements SongPositionListener,
-        ComponentListener, Snapable {
+        ComponentListener, Snapable,IClient {
 
     public static final int OVER_NOTHING = 0;
     public static final int OVER_ITEM_MIDDLE = 1;
@@ -1159,9 +1159,9 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     public abstract void rightButtonPressedOnItem(int x, int y);
 
     // TODO common interface for the selection containers ?
-    public abstract void clientAddToSelection(Item item);
+   // public abstract void clientAddToSelection(Item item);
 
-    public abstract void clientRemoveFromSelection(Item item);
+   // public abstract void clientRemoveFromSelection(Item item);
 
     public abstract void erase(Item item);
 
@@ -1370,7 +1370,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         // TODO Auto-generated method stub
     }
 
-    public abstract void clientNotifySelectionChange();
+   // public abstract void clientNotifySelectionChange();
 
     public ExtendingRangeModel getXRangeModel() {
         return xRangeModel;

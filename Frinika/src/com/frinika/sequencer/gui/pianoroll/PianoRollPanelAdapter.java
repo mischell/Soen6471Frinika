@@ -10,10 +10,15 @@ import com.frinika.sequencer.model.EditHistoryListener;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.util.EventFilter;
 
-public abstract class PianoRollPanelAdapter  extends ItemPanel implements EditHistoryListener,EventFilter {
+public abstract class PianoRollPanelAdapter  extends ClientRequest implements EditHistoryListener,EventFilter {
 
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public PianoRollPanelAdapter(final ProjectContainer project, ItemScrollPane scroller,
 			boolean hasTimeLine, boolean canScrollY) {
 		super(project,scroller, hasTimeLine, canScrollY,.5,false);
@@ -61,7 +66,7 @@ public abstract class PianoRollPanelAdapter  extends ItemPanel implements EditHi
 	public void clientNotifySelectionChange() {
 		this.project.getPartSelection().notifyListeners();	
 	}
-	
+
 	@Override
 	public void setTimeAtX(int x) {
 		long tick = screenToTickAbs(x, this.project.isPianoRollSnapQuantized());

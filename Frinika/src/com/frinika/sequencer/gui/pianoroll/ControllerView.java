@@ -69,6 +69,11 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	// Height of each NoteItem (multiple of ? to make piano nice ?)
 	;
 
+	//public ControllerView(ProjectFrame frame, ItemScrollPane scroller) {
+	//	super(frame, scroller);
+		
+	//}
+
 	int defaultLength; // create notes 1 beat long
 
 	int pitchTop = 127; // top of screen in pitch (actually value in this case)
@@ -120,8 +125,10 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 *            project to view
 	 * @param scroller
 	 *            controls the view onto the virtualScreen.
-	 */
+	 */ 
+	
 	public ControllerView(final ProjectFrame frame, ItemScrollPane scroller) {
+		//super(frame, scroller);
 		super(frame.getProjectContainer(), scroller,false,false);
 		final ProjectContainer project = frame.getProjectContainer();
 		this.sequencer = project.getSequencer();
@@ -1015,6 +1022,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		repaintItems();
 	}
 
+
 	final public boolean isValidEvent(MultiEvent ev) {
 
 		// are we in velocity mode then only use NoteEvents.
@@ -1025,6 +1033,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 
 	}
 
+	
 	@Override
 	protected void writeReleasedAt(Point p) {
 		Part focusPart = project.getPartSelection().getFocus();
@@ -1045,4 +1054,5 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		project.getMultiEventSelection().notifyListeners();
 
 	}
+	
 }

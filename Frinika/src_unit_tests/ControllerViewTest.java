@@ -48,5 +48,19 @@ public class ControllerViewTest {
 		
 		
 	}
+	
+	@Test
+	public void validateControllerViewClient() throws Exception
+	{
+		ProjectFrame frame = new ProjectFrame(new ProjectContainer());
+	    PianoControllerSplitPane scroller = new PianoControllerSplitPane(frame);
+      	ControllerView view = new ControllerView(frame, scroller);
+     	
+      //	view.clientAddToSelection(view.itemAt(view.getLocation()));
+      	view.clientNotifySelectionChange();
+      	view.clientClearSelection();
+		
+	}
+	
 
 }
