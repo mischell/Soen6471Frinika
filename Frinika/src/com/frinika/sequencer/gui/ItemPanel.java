@@ -997,12 +997,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     }
 
     /**
-     * Clears all items from the ItemPanels selection
-     *
-     */
-    public abstract void clientClearSelection();
-
-    /**
      * Add items in the rectangle to the ItemPanels selection.
      */
     public abstract void selectInRect(Rectangle rect, boolean shift);
@@ -1159,10 +1153,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     public abstract void rightButtonPressedOnItem(int x, int y);
 
     // TODO common interface for the selection containers ?
-   // public abstract void clientAddToSelection(Item item);
-
-   // public abstract void clientRemoveFromSelection(Item item);
-
     public abstract void erase(Item item);
 
     /**
@@ -1369,8 +1359,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     public void ignorePartWarp(boolean b) {
         // TODO Auto-generated method stub
     }
-
-   // public abstract void clientNotifySelectionChange();
 
     public ExtendingRangeModel getXRangeModel() {
         return xRangeModel;

@@ -66,13 +66,6 @@ import com.frinika.sequencer.model.util.EventsInPartsIterator;
 
 public class ControllerView extends PianoRollPanelAdapter  implements AdjustmentListener {
 
-	// Height of each NoteItem (multiple of ? to make piano nice ?)
-	;
-
-	//public ControllerView(ProjectFrame frame, ItemScrollPane scroller) {
-	//	super(frame, scroller);
-		
-	//}
 
 	int defaultLength; // create notes 1 beat long
 
@@ -128,7 +121,6 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 */ 
 	
 	public ControllerView(final ProjectFrame frame, ItemScrollPane scroller) {
-		//super(frame, scroller);
 		super(frame.getProjectContainer(), scroller,false,false);
 		final ProjectContainer project = frame.getProjectContainer();
 		this.sequencer = project.getSequencer();
@@ -261,10 +253,6 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		project.getDragList().notifyDragEventListeners();
 		project.getDragList().notifyFeedbackItemListeners();
 		repaintItems();
-	}
-
-	public void clientClearSelection() {
-		project.getMultiEventSelection().clearSelection();
 	}
 
 	/**
@@ -959,17 +947,8 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		System.out.println(" Right button pressed (so what?) ");
 	}
 
-	@Override
-	public void clientAddToSelection(Item item) {
-		project.getMultiEventSelection().addSelected((MultiEvent) item);
-		project.getMultiEventSelection().notifyListeners();
-	}
 
-	@Override
-	public void clientRemoveFromSelection(Item item) {
-		project.getMultiEventSelection().removeSelected((MultiEvent) item);
-		project.getMultiEventSelection().notifyListeners();
-	}
+
 
 
 	

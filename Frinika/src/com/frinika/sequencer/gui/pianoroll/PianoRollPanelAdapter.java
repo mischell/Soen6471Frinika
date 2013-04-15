@@ -63,11 +63,6 @@ public abstract class PianoRollPanelAdapter  extends ClientRequest implements Ed
 	}
 	
 	@Override
-	public void clientNotifySelectionChange() {
-		this.project.getPartSelection().notifyListeners();	
-	}
-
-	@Override
 	public void setTimeAtX(int x) {
 		long tick = screenToTickAbs(x, this.project.isPianoRollSnapQuantized());
 		this.sequencer.setTickPosition(tick);
