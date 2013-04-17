@@ -1,0 +1,756 @@
+From e629f4de094d00cd2ee4b96b2be1e986f61ecc0e Mon Sep 17 00:00:00 2001
+From: Mischell Flor <mischell.flor@gmail.com>
+Date: Sun, 14 Apr 2013 23:55:28 -0400
+Subject: [PATCH] Patch 3: Move Methods and Move  Fields from the old class
+
+---
+ ...-Extract-class-by-grouping-relevant-metho.patch | 625 +++++++++++++++++++++
+ .../src/com/frinika/sequencer/gui/ItemPanel.java   |  12 -
+ .../sequencer/gui/pianoroll/ControllerView.java    |  23 +-
+ .../gui/pianoroll/PianoRollPanelAdapter.java       |   5 -
+ 4 files changed, 626 insertions(+), 39 deletions(-)
+ create mode 100644 0001-For-Patch-2-Extract-class-by-grouping-relevant-metho.patch
+
+diff --git a/0001-For-Patch-2-Extract-class-by-grouping-relevant-metho.patch b/0001-For-Patch-2-Extract-class-by-grouping-relevant-metho.patch
+new file mode 100644
+index 0000000..4919987
+--- /dev/null
++++ b/0001-For-Patch-2-Extract-class-by-grouping-relevant-metho.patch
+@@ -0,0 +1,625 @@
++From 4db03d7b7e3e5e30b771604451ee07743996c031 Mon Sep 17 00:00:00 2001
++From: Mischell Flor <mischell.flor@gmail.com>
++Date: Sun, 14 Apr 2013 23:34:42 -0400
++Subject: [PATCH] For Patch 2: Extract class by grouping relevant methods from
++ the old class and place them into the new class
++
++---
++ ...-Extract-Inner-classes-from-ControllerVie.patch | 382 +++++++++++++++++++++
++ Frinika/src/com/frinika/sequencer/gui/IClient.java |  11 +
++ .../src/com/frinika/sequencer/gui/ItemPanel.java   |   8 +-
++ .../sequencer/gui/pianoroll/ClientRequest.java     |  54 +++
++ .../sequencer/gui/pianoroll/ControllerView.java    |  12 +-
++ .../gui/pianoroll/PianoRollPanelAdapter.java       |   9 +-
++ Frinika/src_unit_tests/ControllerViewTest.java     |  14 +
++ 7 files changed, 483 insertions(+), 7 deletions(-)
++ create mode 100644 0001-For-Patch-1-Extract-Inner-classes-from-ControllerVie.patch
++ create mode 100644 Frinika/src/com/frinika/sequencer/gui/IClient.java
++ create mode 100644 Frinika/src/com/frinika/sequencer/gui/pianoroll/ClientRequest.java
++
++diff --git a/0001-For-Patch-1-Extract-Inner-classes-from-ControllerVie.patch b/0001-For-Patch-1-Extract-Inner-classes-from-ControllerVie.patch
++new file mode 100644
++index 0000000..275c715
++--- /dev/null
+++++ b/0001-For-Patch-1-Extract-Inner-classes-from-ControllerVie.patch
++@@ -0,0 +1,382 @@
+++From 1fdf5ee95afa783e1e805d258426a60fe4a8c0df Mon Sep 17 00:00:00 2001
+++From: Mischell Flor <mischell.flor@gmail.com>
+++Date: Sun, 14 Apr 2013 04:09:45 -0400
+++Subject: [PATCH] For Patch 1:  Extract Inner classes from ControllerView and
+++ make them as a class
+++
+++---
+++ .../sequencer/gui/pianoroll/ControllerView.java    | 135 +--------------------
+++ .../gui/pianoroll/NoteOnScreenCollection.java      |  81 +++++++++++++
+++ .../gui/pianoroll/NoteOnScreenIterator.java        |  64 ++++++++++
+++ Frinika/src_unit_tests/ControllerViewTest.java     |  52 ++++++++
+++ 4 files changed, 198 insertions(+), 134 deletions(-)
+++ create mode 100644 Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+++ create mode 100644 Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+++ create mode 100644 Frinika/src_unit_tests/ControllerViewTest.java
+++
+++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+++index 55508de..971c20a 100644
+++--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
++++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+++@@ -964,141 +964,8 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
+++ 		project.getMultiEventSelection().notifyListeners();
+++ 	}
+++ 
+++-	/**
+++-	 * Only used for it's iterator
+++-	 * 
+++-	 * @author pjl
+++-	 * 
+++-	 */
+++-	class NoteOnScreenCollection implements Collection<MultiEvent> {
+++-
+++-		public int size() {
+++-			// TODO Auto-generated method stub
+++-			return 0;
+++-		}
+++-
+++-		public boolean isEmpty() {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean contains(Object o) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public Iterator<MultiEvent> iterator() {
+++-			return new NoteOnScreenIterator();
+++-		}
+++-
+++-		public Object[] toArray() {
+++-			// TODO Auto-generated method stub
+++-			return null;
+++-		}
+++-
+++-		public <T> T[] toArray(T[] a) {
+++-			// TODO Auto-generated method stub
+++-			return null;
+++-		}
+++-
+++-		public boolean add(MultiEvent o) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean remove(Object o) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean containsAll(Collection<?> c) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean addAll(Collection<? extends MultiEvent> c) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean removeAll(Collection<?> c) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public boolean retainAll(Collection<?> c) {
+++-			// TODO Auto-generated method stub
+++-			return false;
+++-		}
+++-
+++-		public void clear() {
+++-			// TODO Auto-generated method stub
+++-
+++-		}
+++-
+++-	}
+++-
+++-	/**
+++-	 * TODO Rough implmentation needs to be optimized
+++-	 * 
+++-	 * @author pjl
+++-	 * 
+++-	 */
+++-	class NoteOnScreenIterator implements Iterator<MultiEvent> {
+++-
+++-		Iterator<Part> partIter = null;
+++-
+++-		Iterator<MultiEvent> noteIter = null;
+++-
+++-		NoteOnScreenIterator() {
+++-			partIter = project.getPartSelection().getSelected().iterator();
+++-			advanceToNextMidiPart();
+++-		}
+++-
+++-		private boolean advanceToNextMidiPart() {
+++-
+++-			Part part = null;
+++-
+++-			while (partIter.hasNext()) {
+++-				part = partIter.next();
+++-				if (part instanceof MidiPart) {
+++-					noteIter = ((MidiPart) part).getMultiEvents().iterator();
+++-					return true;
+++-				}
+++-			}
+++-			noteIter = null;
+++-			return false;
+++-		}
+++-
+++-		public boolean hasNext() {
+++-			if (noteIter == null)
+++-				return false;
+++-			if (noteIter.hasNext())
+++-				return true;
+++-
+++-			// TODO Auto-generated method stub
+++-			return advanceToNextMidiPart();
+++-		}
+++-
+++-		public MultiEvent next() {
+++-			if (noteIter.hasNext()) {
+++-				MultiEvent ev = noteIter.next();
+++-				return ev;
+++-			}
+++-
+++-			// He he sneak a bit of recursion in here (PJL)
+++-			if (advanceToNextMidiPart())
+++-				return next();
+++-			return null;
+++-		}
+++-
+++-		public void remove() {
+++-			assert (false);
+++-			// TODO Auto-generated method stub
+++-		}
+++-
+++-	}
+++ 
++++	
+++ 	@Override
+++ 	public int getHoverStateAt(Point p) {
+++ 
+++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+++new file mode 100644
+++index 0000000..1c6c67d
+++--- /dev/null
++++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+++@@ -0,0 +1,81 @@
++++package com.frinika.sequencer.gui.pianoroll;
++++
++++import java.util.Collection;
++++import java.util.Iterator;
++++
++++import com.frinika.project.ProjectContainer;
++++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenIterator;
++++import com.frinika.sequencer.model.MultiEvent;
++++
++++public class NoteOnScreenCollection implements Collection<MultiEvent> {
++++
++++	protected ProjectContainer project;
++++	public NoteOnScreenCollection(ProjectContainer project){
++++		this.project = project;
++++		
++++	}
++++	public int size() {
++++		// TODO Auto-generated method stub
++++		return 0;
++++	}
++++
++++	public boolean isEmpty() {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean contains(Object o) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public Iterator<MultiEvent> iterator() {
++++		return new NoteOnScreenIterator(project);
++++	}
++++
++++	public Object[] toArray() {
++++		// TODO Auto-generated method stub
++++		return null;
++++	}
++++
++++	public <T> T[] toArray(T[] a) {
++++		// TODO Auto-generated method stub
++++		return null;
++++	}
++++
++++	public boolean add(MultiEvent o) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean remove(Object o) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean containsAll(Collection<?> c) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean addAll(Collection<? extends MultiEvent> c) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean removeAll(Collection<?> c) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public boolean retainAll(Collection<?> c) {
++++		// TODO Auto-generated method stub
++++		return false;
++++	}
++++
++++	public void clear() {
++++		// TODO Auto-generated method stub
++++
++++	}
++++
++++}
+++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+++new file mode 100644
+++index 0000000..94b9a36
+++--- /dev/null
++++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+++@@ -0,0 +1,64 @@
++++package com.frinika.sequencer.gui.pianoroll;
++++
++++import java.util.Iterator;
++++
++++import com.frinika.project.ProjectContainer;
++++import com.frinika.sequencer.model.MidiPart;
++++import com.frinika.sequencer.model.MultiEvent;
++++import com.frinika.sequencer.model.Part;
++++
++++public class NoteOnScreenIterator implements Iterator<MultiEvent> {
++++
++++	Iterator<Part> partIter = null;
++++
++++	Iterator<MultiEvent> noteIter = null;
++++
++++	public NoteOnScreenIterator(ProjectContainer project) {
++++		partIter = project.getPartSelection().getSelected().iterator();
++++		advanceToNextMidiPart();
++++	}
++++	
++++	
++++	private boolean advanceToNextMidiPart() {
++++
++++		Part part = null;
++++
++++		while (partIter.hasNext()) {
++++			part = partIter.next();
++++			if (part instanceof MidiPart) {
++++				noteIter = ((MidiPart) part).getMultiEvents().iterator();
++++				return true;
++++			}
++++		}
++++		noteIter = null;
++++		return false;
++++	}
++++
++++	public boolean hasNext() {
++++		if (noteIter == null)
++++			return false;
++++		if (noteIter.hasNext())
++++			return true;
++++
++++		// TODO Auto-generated method stub
++++		return advanceToNextMidiPart();
++++	}
++++
++++	public MultiEvent next() {
++++		if (noteIter.hasNext()) {
++++			MultiEvent ev = noteIter.next();
++++			return ev;
++++		}
++++
++++		// He he sneak a bit of recursion in here (PJL)
++++		if (advanceToNextMidiPart())
++++			return next();
++++		return null;
++++	}
++++
++++	public void remove() {
++++		assert (false);
++++		// TODO Auto-generated method stub
++++	}
++++
++++}
+++\ No newline at end of file
+++diff --git a/Frinika/src_unit_tests/ControllerViewTest.java b/Frinika/src_unit_tests/ControllerViewTest.java
+++new file mode 100644
+++index 0000000..4a2f911
+++--- /dev/null
++++++ b/Frinika/src_unit_tests/ControllerViewTest.java
+++@@ -0,0 +1,52 @@
++++import java.awt.Graphics2D;
++++import java.awt.Point;
++++import java.awt.Rectangle;
++++
++++import javax.sound.midi.MidiSystem;
++++import javax.sound.midi.Sequence;
++++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenIterator;
++++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenCollection;
++++import com.frinika.project.ProjectContainer;
++++import com.frinika.project.gui.ProjectFrame;
++++import com.frinika.sequencer.gui.ItemScrollPane;
++++import com.frinika.sequencer.gui.pianoroll.ControllerHandle;
++++import com.frinika.sequencer.gui.pianoroll.ControllerView;
++++import com.frinika.sequencer.gui.pianoroll.PianoControllerSplitPane;
++++
++++import static org.junit.Assert.*;
++++
++++import org.junit.Test;
++++
++++
++++public class ControllerViewTest {
++++
++++	@Test
++++	public void TestNoteOnScreenCollection() throws Exception
++++	{
++++		NoteOnScreenCollection collection = new NoteOnScreenCollection(new ProjectContainer());
++++		assertNotNull(collection);
++++	}
++++	
++++	
++++	@Test
++++	public void TestNoteOnScreenIterator() throws Exception
++++	{
++++
++++		NoteOnScreenIterator iter = new NoteOnScreenIterator(new ProjectContainer()); 
++++	    assertFalse(iter.hasNext());
++++	    assertNotNull(iter);
++++
++++	}
++++	
++++	@Test
++++	public void validateControllerViewInner() throws Exception
++++	{
++++		ProjectFrame frame = new ProjectFrame(new ProjectContainer());
++++		PianoControllerSplitPane scroller = new PianoControllerSplitPane(frame);
++++		ControllerView view = new ControllerView(frame, scroller);
++++		assertNotNull(view);
++++		
++++		
++++	}
++++
++++}
+++-- 
+++1.8.0.msysgit.0
+++
++diff --git a/Frinika/src/com/frinika/sequencer/gui/IClient.java b/Frinika/src/com/frinika/sequencer/gui/IClient.java
++new file mode 100644
++index 0000000..b6b1380
++--- /dev/null
+++++ b/Frinika/src/com/frinika/sequencer/gui/IClient.java
++@@ -0,0 +1,11 @@
+++package com.frinika.sequencer.gui;
+++
+++
+++public interface IClient {
+++	
+++	public abstract void clientAddToSelection(Item item);
+++    public abstract void clientRemoveFromSelection(Item item);
+++    public abstract void clientNotifySelectionChange();
+++    public abstract void clientClearSelection();
+++
+++}
++diff --git a/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java b/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
++index aa83740..de0a8a9 100644
++--- a/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
+++++ b/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
++@@ -63,7 +63,7 @@ import static com.frinika.localization.CurrentLocale.getMessage;
++  * 
++  */
++ abstract public class ItemPanel extends JPanel implements SongPositionListener,
++-        ComponentListener, Snapable {
+++        ComponentListener, Snapable,IClient {
++ 
++     public static final int OVER_NOTHING = 0;
++     public static final int OVER_ITEM_MIDDLE = 1;
++@@ -1159,9 +1159,9 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
++     public abstract void rightButtonPressedOnItem(int x, int y);
++ 
++     // TODO common interface for the selection containers ?
++-    public abstract void clientAddToSelection(Item item);
+++   // public abstract void clientAddToSelection(Item item);
++ 
++-    public abstract void clientRemoveFromSelection(Item item);
+++   // public abstract void clientRemoveFromSelection(Item item);
++ 
++     public abstract void erase(Item item);
++ 
++@@ -1370,7 +1370,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
++         // TODO Auto-generated method stub
++     }
++ 
++-    public abstract void clientNotifySelectionChange();
+++   // public abstract void clientNotifySelectionChange();
++ 
++     public ExtendingRangeModel getXRangeModel() {
++         return xRangeModel;
++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ClientRequest.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ClientRequest.java
++new file mode 100644
++index 0000000..cb2c5df
++--- /dev/null
+++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ClientRequest.java
++@@ -0,0 +1,54 @@
+++package com.frinika.sequencer.gui.pianoroll;
+++
+++import java.util.Vector;
+++import com.frinika.project.ProjectContainer;
+++import com.frinika.project.gui.ProjectFrame;
+++import com.frinika.sequencer.gui.IClient;
+++import com.frinika.sequencer.gui.Item;
+++import com.frinika.sequencer.gui.ItemPanel;
+++import com.frinika.sequencer.gui.ItemScrollPane;
+++import com.frinika.sequencer.model.MultiEvent;
+++
+++abstract public class ClientRequest extends ItemPanel{
+++
+++	
+++	private static final long serialVersionUID = 1L;
+++
+++	Vector<MultiEvent> notesUnder;
+++
+++	MultiEvent dragEvent;
+++
+++
+++	Iterable<MultiEvent> eventsInFocus;
+++	final ProjectContainer project;
+++
+++	public ClientRequest(final ProjectContainer project, ItemScrollPane scroller,boolean hasTimeLine, boolean canScrollY, double d, boolean b) {
+++		super(project,scroller, hasTimeLine, canScrollY,.5,false);
+++		this.project = project;
+++	}
+++	
+++	@Override
+++	public void clientNotifySelectionChange() {
+++		this.project.getPartSelection().notifyListeners();	
+++	}
+++		
+++	@Override
+++	public void clientAddToSelection(Item item) {
+++		project.getMultiEventSelection().addSelected((MultiEvent) item);
+++		project.getMultiEventSelection().notifyListeners();
+++	}
+++
+++	@Override
+++	public void clientRemoveFromSelection(Item item) {
+++		project.getMultiEventSelection().removeSelected((MultiEvent) item);
+++		project.getMultiEventSelection().notifyListeners();
+++	}
+++
+++	@Override
+++	public void clientClearSelection() {
+++		project.getMultiEventSelection().clearSelection();
+++	}
+++	
+++}
+++
+++
++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
++index 971c20a..7ba3520 100644
++--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
++@@ -69,6 +69,11 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
++ 	// Height of each NoteItem (multiple of ? to make piano nice ?)
++ 	;
++ 
+++	//public ControllerView(ProjectFrame frame, ItemScrollPane scroller) {
+++	//	super(frame, scroller);
+++		
+++	//}
+++
++ 	int defaultLength; // create notes 1 beat long
++ 
++ 	int pitchTop = 127; // top of screen in pitch (actually value in this case)
++@@ -120,8 +125,10 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
++ 	 *            project to view
++ 	 * @param scroller
++ 	 *            controls the view onto the virtualScreen.
++-	 */
+++	 */ 
+++	
++ 	public ControllerView(final ProjectFrame frame, ItemScrollPane scroller) {
+++		//super(frame, scroller);
++ 		super(frame.getProjectContainer(), scroller,false,false);
++ 		final ProjectContainer project = frame.getProjectContainer();
++ 		this.sequencer = project.getSequencer();
++@@ -1015,6 +1022,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
++ 		repaintItems();
++ 	}
++ 
+++
++ 	final public boolean isValidEvent(MultiEvent ev) {
++ 
++ 		// are we in velocity mode then only use NoteEvents.
++@@ -1025,6 +1033,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
++ 
++ 	}
++ 
+++	
++ 	@Override
++ 	protected void writeReleasedAt(Point p) {
++ 		Part focusPart = project.getPartSelection().getFocus();
++@@ -1045,4 +1054,5 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
++ 		project.getMultiEventSelection().notifyListeners();
++ 
++ 	}
+++	
++ }
++diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
++index 89b03ec..4685367 100644
++--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
+++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
++@@ -10,10 +10,15 @@ import com.frinika.sequencer.model.EditHistoryListener;
++ import com.frinika.sequencer.model.MultiEvent;
++ import com.frinika.sequencer.model.util.EventFilter;
++ 
++-public abstract class PianoRollPanelAdapter  extends ItemPanel implements EditHistoryListener,EventFilter {
+++public abstract class PianoRollPanelAdapter  extends ClientRequest implements EditHistoryListener,EventFilter {
++ 
++ 
++ 	
+++	/**
+++	 * 
+++	 */
+++	private static final long serialVersionUID = 1L;
+++
++ 	public PianoRollPanelAdapter(final ProjectContainer project, ItemScrollPane scroller,
++ 			boolean hasTimeLine, boolean canScrollY) {
++ 		super(project,scroller, hasTimeLine, canScrollY,.5,false);
++@@ -61,7 +66,7 @@ public abstract class PianoRollPanelAdapter  extends ItemPanel implements EditHi
++ 	public void clientNotifySelectionChange() {
++ 		this.project.getPartSelection().notifyListeners();	
++ 	}
++-	
+++
++ 	@Override
++ 	public void setTimeAtX(int x) {
++ 		long tick = screenToTickAbs(x, this.project.isPianoRollSnapQuantized());
++diff --git a/Frinika/src_unit_tests/ControllerViewTest.java b/Frinika/src_unit_tests/ControllerViewTest.java
++index 4a2f911..62d0733 100644
++--- a/Frinika/src_unit_tests/ControllerViewTest.java
+++++ b/Frinika/src_unit_tests/ControllerViewTest.java
++@@ -48,5 +48,19 @@ public class ControllerViewTest {
++ 		
++ 		
++ 	}
+++	
+++	@Test
+++	public void validateControllerViewClient() throws Exception
+++	{
+++		ProjectFrame frame = new ProjectFrame(new ProjectContainer());
+++	    PianoControllerSplitPane scroller = new PianoControllerSplitPane(frame);
+++      	ControllerView view = new ControllerView(frame, scroller);
+++     	
+++      //	view.clientAddToSelection(view.itemAt(view.getLocation()));
+++      	view.clientNotifySelectionChange();
+++      	view.clientClearSelection();
+++		
+++	}
+++	
++ 
++ }
++-- 
++1.8.0.msysgit.0
++
+diff --git a/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java b/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
+index de0a8a9..2c97ea2 100644
+--- a/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
++++ b/Frinika/src/com/frinika/sequencer/gui/ItemPanel.java
+@@ -997,12 +997,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
+     }
+ 
+     /**
+-     * Clears all items from the ItemPanels selection
+-     *
+-     */
+-    public abstract void clientClearSelection();
+-
+-    /**
+      * Add items in the rectangle to the ItemPanels selection.
+      */
+     public abstract void selectInRect(Rectangle rect, boolean shift);
+@@ -1159,10 +1153,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
+     public abstract void rightButtonPressedOnItem(int x, int y);
+ 
+     // TODO common interface for the selection containers ?
+-   // public abstract void clientAddToSelection(Item item);
+-
+-   // public abstract void clientRemoveFromSelection(Item item);
+-
+     public abstract void erase(Item item);
+ 
+     /**
+@@ -1370,8 +1360,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
+         // TODO Auto-generated method stub
+     }
+ 
+-   // public abstract void clientNotifySelectionChange();
+-
+     public ExtendingRangeModel getXRangeModel() {
+         return xRangeModel;
+     }
+diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+index 7ba3520..60a70d4 100644
+--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+@@ -66,13 +66,6 @@ import com.frinika.sequencer.model.util.EventsInPartsIterator;
+ 
+ public class ControllerView extends PianoRollPanelAdapter  implements AdjustmentListener {
+ 
+-	// Height of each NoteItem (multiple of ? to make piano nice ?)
+-	;
+-
+-	//public ControllerView(ProjectFrame frame, ItemScrollPane scroller) {
+-	//	super(frame, scroller);
+-		
+-	//}
+ 
+ 	int defaultLength; // create notes 1 beat long
+ 
+@@ -128,7 +121,6 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
+ 	 */ 
+ 	
+ 	public ControllerView(final ProjectFrame frame, ItemScrollPane scroller) {
+-		//super(frame, scroller);
+ 		super(frame.getProjectContainer(), scroller,false,false);
+ 		final ProjectContainer project = frame.getProjectContainer();
+ 		this.sequencer = project.getSequencer();
+@@ -263,10 +255,6 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
+ 		repaintItems();
+ 	}
+ 
+-	public void clientClearSelection() {
+-		project.getMultiEventSelection().clearSelection();
+-	}
+-
+ 	/**
+ 	 * Call this to start dragging with the reference point. See dragTo A copy
+ 	 * is made of the valid selected events into dragList.
+@@ -959,17 +947,8 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
+ 		System.out.println(" Right button pressed (so what?) ");
+ 	}
+ 
+-	@Override
+-	public void clientAddToSelection(Item item) {
+-		project.getMultiEventSelection().addSelected((MultiEvent) item);
+-		project.getMultiEventSelection().notifyListeners();
+-	}
+ 
+-	@Override
+-	public void clientRemoveFromSelection(Item item) {
+-		project.getMultiEventSelection().removeSelected((MultiEvent) item);
+-		project.getMultiEventSelection().notifyListeners();
+-	}
++
+ 
+ 
+ 	
+diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
+index 4685367..ad9541d 100644
+--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/PianoRollPanelAdapter.java
+@@ -63,11 +63,6 @@ public abstract class PianoRollPanelAdapter  extends ClientRequest implements Ed
+ 	}
+ 	
+ 	@Override
+-	public void clientNotifySelectionChange() {
+-		this.project.getPartSelection().notifyListeners();	
+-	}
+-
+-	@Override
+ 	public void setTimeAtX(int x) {
+ 		long tick = screenToTickAbs(x, this.project.isPianoRollSnapQuantized());
+ 		this.sequencer.setTickPosition(tick);
+-- 
+1.8.0.msysgit.0
+

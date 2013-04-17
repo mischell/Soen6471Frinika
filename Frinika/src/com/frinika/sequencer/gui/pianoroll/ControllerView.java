@@ -66,8 +66,6 @@ import com.frinika.sequencer.model.util.EventsInPartsIterator;
 
 public class ControllerView extends PianoRollPanelAdapter  implements AdjustmentListener {
 
-	// Height of each NoteItem (multiple of ? to make piano nice ?)
-	;
 
 	int defaultLength; // create notes 1 beat long
 
@@ -120,7 +118,8 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 *            project to view
 	 * @param scroller
 	 *            controls the view onto the virtualScreen.
-	 */
+	 */ 
+	
 	public ControllerView(final ProjectFrame frame, ItemScrollPane scroller) {
 		super(frame.getProjectContainer(), scroller,false,false);
 		final ProjectContainer project = frame.getProjectContainer();
@@ -254,10 +253,6 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		project.getDragList().notifyDragEventListeners();
 		project.getDragList().notifyFeedbackItemListeners();
 		repaintItems();
-	}
-
-	public void clientClearSelection() {
-		project.getMultiEventSelection().clearSelection();
 	}
 
 	/**
@@ -952,153 +947,11 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		System.out.println(" Right button pressed (so what?) ");
 	}
 
-	@Override
-	public void clientAddToSelection(Item item) {
-		project.getMultiEventSelection().addSelected((MultiEvent) item);
-		project.getMultiEventSelection().notifyListeners();
-	}
 
-	@Override
-	public void clientRemoveFromSelection(Item item) {
-		project.getMultiEventSelection().removeSelected((MultiEvent) item);
-		project.getMultiEventSelection().notifyListeners();
-	}
 
-	/**
-	 * Only used for it's iterator
-	 * 
-	 * @author pjl
-	 * 
-	 */
-	class NoteOnScreenCollection implements Collection<MultiEvent> {
 
-		public int size() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
 
-		public boolean isEmpty() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean contains(Object o) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public Iterator<MultiEvent> iterator() {
-			return new NoteOnScreenIterator();
-		}
-
-		public Object[] toArray() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public <T> T[] toArray(T[] a) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public boolean add(MultiEvent o) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean remove(Object o) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean containsAll(Collection<?> c) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean addAll(Collection<? extends MultiEvent> c) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean removeAll(Collection<?> c) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public boolean retainAll(Collection<?> c) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		public void clear() {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
-
-	/**
-	 * TODO Rough implmentation needs to be optimized
-	 * 
-	 * @author pjl
-	 * 
-	 */
-	class NoteOnScreenIterator implements Iterator<MultiEvent> {
-
-		Iterator<Part> partIter = null;
-
-		Iterator<MultiEvent> noteIter = null;
-
-		NoteOnScreenIterator() {
-			partIter = project.getPartSelection().getSelected().iterator();
-			advanceToNextMidiPart();
-		}
-
-		private boolean advanceToNextMidiPart() {
-
-			Part part = null;
-
-			while (partIter.hasNext()) {
-				part = partIter.next();
-				if (part instanceof MidiPart) {
-					noteIter = ((MidiPart) part).getMultiEvents().iterator();
-					return true;
-				}
-			}
-			noteIter = null;
-			return false;
-		}
-
-		public boolean hasNext() {
-			if (noteIter == null)
-				return false;
-			if (noteIter.hasNext())
-				return true;
-
-			// TODO Auto-generated method stub
-			return advanceToNextMidiPart();
-		}
-
-		public MultiEvent next() {
-			if (noteIter.hasNext()) {
-				MultiEvent ev = noteIter.next();
-				return ev;
-			}
-
-			// He he sneak a bit of recursion in here (PJL)
-			if (advanceToNextMidiPart())
-				return next();
-			return null;
-		}
-
-		public void remove() {
-			assert (false);
-			// TODO Auto-generated method stub
-		}
-
-	}
-
+	
 	@Override
 	public int getHoverStateAt(Point p) {
 
@@ -1148,6 +1001,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		repaintItems();
 	}
 
+
 	final public boolean isValidEvent(MultiEvent ev) {
 
 		// are we in velocity mode then only use NoteEvents.
@@ -1158,6 +1012,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 
 	}
 
+	
 	@Override
 	protected void writeReleasedAt(Point p) {
 		Part focusPart = project.getPartSelection().getFocus();
@@ -1178,4 +1033,5 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		project.getMultiEventSelection().notifyListeners();
 
 	}
+	
 }

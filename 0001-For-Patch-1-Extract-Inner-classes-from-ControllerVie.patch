@@ -1,0 +1,382 @@
+From 1fdf5ee95afa783e1e805d258426a60fe4a8c0df Mon Sep 17 00:00:00 2001
+From: Mischell Flor <mischell.flor@gmail.com>
+Date: Sun, 14 Apr 2013 04:09:45 -0400
+Subject: [PATCH] For Patch 1:  Extract Inner classes from ControllerView and
+ make them as a class
+
+---
+ .../sequencer/gui/pianoroll/ControllerView.java    | 135 +--------------------
+ .../gui/pianoroll/NoteOnScreenCollection.java      |  81 +++++++++++++
+ .../gui/pianoroll/NoteOnScreenIterator.java        |  64 ++++++++++
+ Frinika/src_unit_tests/ControllerViewTest.java     |  52 ++++++++
+ 4 files changed, 198 insertions(+), 134 deletions(-)
+ create mode 100644 Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+ create mode 100644 Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+ create mode 100644 Frinika/src_unit_tests/ControllerViewTest.java
+
+diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+index 55508de..971c20a 100644
+--- a/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/ControllerView.java
+@@ -964,141 +964,8 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
+ 		project.getMultiEventSelection().notifyListeners();
+ 	}
+ 
+-	/**
+-	 * Only used for it's iterator
+-	 * 
+-	 * @author pjl
+-	 * 
+-	 */
+-	class NoteOnScreenCollection implements Collection<MultiEvent> {
+-
+-		public int size() {
+-			// TODO Auto-generated method stub
+-			return 0;
+-		}
+-
+-		public boolean isEmpty() {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean contains(Object o) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public Iterator<MultiEvent> iterator() {
+-			return new NoteOnScreenIterator();
+-		}
+-
+-		public Object[] toArray() {
+-			// TODO Auto-generated method stub
+-			return null;
+-		}
+-
+-		public <T> T[] toArray(T[] a) {
+-			// TODO Auto-generated method stub
+-			return null;
+-		}
+-
+-		public boolean add(MultiEvent o) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean remove(Object o) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean containsAll(Collection<?> c) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean addAll(Collection<? extends MultiEvent> c) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean removeAll(Collection<?> c) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public boolean retainAll(Collection<?> c) {
+-			// TODO Auto-generated method stub
+-			return false;
+-		}
+-
+-		public void clear() {
+-			// TODO Auto-generated method stub
+-
+-		}
+-
+-	}
+-
+-	/**
+-	 * TODO Rough implmentation needs to be optimized
+-	 * 
+-	 * @author pjl
+-	 * 
+-	 */
+-	class NoteOnScreenIterator implements Iterator<MultiEvent> {
+-
+-		Iterator<Part> partIter = null;
+-
+-		Iterator<MultiEvent> noteIter = null;
+-
+-		NoteOnScreenIterator() {
+-			partIter = project.getPartSelection().getSelected().iterator();
+-			advanceToNextMidiPart();
+-		}
+-
+-		private boolean advanceToNextMidiPart() {
+-
+-			Part part = null;
+-
+-			while (partIter.hasNext()) {
+-				part = partIter.next();
+-				if (part instanceof MidiPart) {
+-					noteIter = ((MidiPart) part).getMultiEvents().iterator();
+-					return true;
+-				}
+-			}
+-			noteIter = null;
+-			return false;
+-		}
+-
+-		public boolean hasNext() {
+-			if (noteIter == null)
+-				return false;
+-			if (noteIter.hasNext())
+-				return true;
+-
+-			// TODO Auto-generated method stub
+-			return advanceToNextMidiPart();
+-		}
+-
+-		public MultiEvent next() {
+-			if (noteIter.hasNext()) {
+-				MultiEvent ev = noteIter.next();
+-				return ev;
+-			}
+-
+-			// He he sneak a bit of recursion in here (PJL)
+-			if (advanceToNextMidiPart())
+-				return next();
+-			return null;
+-		}
+-
+-		public void remove() {
+-			assert (false);
+-			// TODO Auto-generated method stub
+-		}
+-
+-	}
+ 
++	
+ 	@Override
+ 	public int getHoverStateAt(Point p) {
+ 
+diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+new file mode 100644
+index 0000000..1c6c67d
+--- /dev/null
++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenCollection.java
+@@ -0,0 +1,81 @@
++package com.frinika.sequencer.gui.pianoroll;
++
++import java.util.Collection;
++import java.util.Iterator;
++
++import com.frinika.project.ProjectContainer;
++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenIterator;
++import com.frinika.sequencer.model.MultiEvent;
++
++public class NoteOnScreenCollection implements Collection<MultiEvent> {
++
++	protected ProjectContainer project;
++	public NoteOnScreenCollection(ProjectContainer project){
++		this.project = project;
++		
++	}
++	public int size() {
++		// TODO Auto-generated method stub
++		return 0;
++	}
++
++	public boolean isEmpty() {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean contains(Object o) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public Iterator<MultiEvent> iterator() {
++		return new NoteOnScreenIterator(project);
++	}
++
++	public Object[] toArray() {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++	public <T> T[] toArray(T[] a) {
++		// TODO Auto-generated method stub
++		return null;
++	}
++
++	public boolean add(MultiEvent o) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean remove(Object o) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean containsAll(Collection<?> c) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean addAll(Collection<? extends MultiEvent> c) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean removeAll(Collection<?> c) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public boolean retainAll(Collection<?> c) {
++		// TODO Auto-generated method stub
++		return false;
++	}
++
++	public void clear() {
++		// TODO Auto-generated method stub
++
++	}
++
++}
+diff --git a/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+new file mode 100644
+index 0000000..94b9a36
+--- /dev/null
++++ b/Frinika/src/com/frinika/sequencer/gui/pianoroll/NoteOnScreenIterator.java
+@@ -0,0 +1,64 @@
++package com.frinika.sequencer.gui.pianoroll;
++
++import java.util.Iterator;
++
++import com.frinika.project.ProjectContainer;
++import com.frinika.sequencer.model.MidiPart;
++import com.frinika.sequencer.model.MultiEvent;
++import com.frinika.sequencer.model.Part;
++
++public class NoteOnScreenIterator implements Iterator<MultiEvent> {
++
++	Iterator<Part> partIter = null;
++
++	Iterator<MultiEvent> noteIter = null;
++
++	public NoteOnScreenIterator(ProjectContainer project) {
++		partIter = project.getPartSelection().getSelected().iterator();
++		advanceToNextMidiPart();
++	}
++	
++	
++	private boolean advanceToNextMidiPart() {
++
++		Part part = null;
++
++		while (partIter.hasNext()) {
++			part = partIter.next();
++			if (part instanceof MidiPart) {
++				noteIter = ((MidiPart) part).getMultiEvents().iterator();
++				return true;
++			}
++		}
++		noteIter = null;
++		return false;
++	}
++
++	public boolean hasNext() {
++		if (noteIter == null)
++			return false;
++		if (noteIter.hasNext())
++			return true;
++
++		// TODO Auto-generated method stub
++		return advanceToNextMidiPart();
++	}
++
++	public MultiEvent next() {
++		if (noteIter.hasNext()) {
++			MultiEvent ev = noteIter.next();
++			return ev;
++		}
++
++		// He he sneak a bit of recursion in here (PJL)
++		if (advanceToNextMidiPart())
++			return next();
++		return null;
++	}
++
++	public void remove() {
++		assert (false);
++		// TODO Auto-generated method stub
++	}
++
++}
+\ No newline at end of file
+diff --git a/Frinika/src_unit_tests/ControllerViewTest.java b/Frinika/src_unit_tests/ControllerViewTest.java
+new file mode 100644
+index 0000000..4a2f911
+--- /dev/null
++++ b/Frinika/src_unit_tests/ControllerViewTest.java
+@@ -0,0 +1,52 @@
++import java.awt.Graphics2D;
++import java.awt.Point;
++import java.awt.Rectangle;
++
++import javax.sound.midi.MidiSystem;
++import javax.sound.midi.Sequence;
++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenIterator;
++import com.frinika.sequencer.gui.pianoroll.NoteOnScreenCollection;
++import com.frinika.project.ProjectContainer;
++import com.frinika.project.gui.ProjectFrame;
++import com.frinika.sequencer.gui.ItemScrollPane;
++import com.frinika.sequencer.gui.pianoroll.ControllerHandle;
++import com.frinika.sequencer.gui.pianoroll.ControllerView;
++import com.frinika.sequencer.gui.pianoroll.PianoControllerSplitPane;
++
++import static org.junit.Assert.*;
++
++import org.junit.Test;
++
++
++public class ControllerViewTest {
++
++	@Test
++	public void TestNoteOnScreenCollection() throws Exception
++	{
++		NoteOnScreenCollection collection = new NoteOnScreenCollection(new ProjectContainer());
++		assertNotNull(collection);
++	}
++	
++	
++	@Test
++	public void TestNoteOnScreenIterator() throws Exception
++	{
++
++		NoteOnScreenIterator iter = new NoteOnScreenIterator(new ProjectContainer()); 
++	    assertFalse(iter.hasNext());
++	    assertNotNull(iter);
++
++	}
++	
++	@Test
++	public void validateControllerViewInner() throws Exception
++	{
++		ProjectFrame frame = new ProjectFrame(new ProjectContainer());
++		PianoControllerSplitPane scroller = new PianoControllerSplitPane(frame);
++		ControllerView view = new ControllerView(frame, scroller);
++		assertNotNull(view);
++		
++		
++	}
++
++}
+-- 
+1.8.0.msysgit.0
+
